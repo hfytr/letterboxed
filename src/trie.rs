@@ -1,18 +1,19 @@
+#[derive(Debug, Default)]
 pub struct Trie {
     root: TrieNode,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 struct TrieNode {
     children: [Option<Box<TrieNode>>; 26],
     is_key: bool,
 }
 
-fn get_num_let(c: usize) -> u8 {
-    (c as u8) + ('a' as u8)
+pub fn get_num_let(c: usize) -> u8 {
+    (c as u8) + b'a'
 }
 
-fn get_let_num(c: u8) -> usize {
+pub fn get_let_num(c: u8) -> usize {
     (c as usize) - ('a' as usize)
 }
 
@@ -64,7 +65,7 @@ impl TrieNode {
         if self.is_key {
             keys.push(String::new());
         }
-        for (i, child) in self.get_children(&String::new()).unwrap() {
+        for (i, child) in self.get_children("").unwrap() {
             for mut child_key in child.list_reversed_keys() {
                 child_key.push(get_num_let(i) as char);
                 keys.push(child_key);
@@ -99,7 +100,7 @@ impl Trie {
     }
 
     pub fn insert(&mut self, key: &str) {
-        self.root.insert(&key, 0)
+        self.root.insert(key, 0)
     }
 
     pub fn get_children(&self, key: &str) -> Option<Vec<u8>> {
@@ -113,11 +114,14 @@ impl Trie {
         )
     }
 
-    pub fn list_members(&self) -> Vec<String> {
-        self.root
-            .list_reversed_keys()
-            .into_iter()
-            .map(|x| x.chars().rev().collect::<String>())
-            .collect()
+    pub fn list_keys(&self, key: &str) -> Option<Vec<String>> {
+        Some(
+            self.root
+                .query(key, 0)?
+                .list_reversed_keys()
+                .into_iter()
+                .map(|x| x.chars().rev().collect::<String>())
+                .collect(),
+        )
     }
 }

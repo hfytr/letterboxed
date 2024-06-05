@@ -1,15 +1,39 @@
 use crate::letterbox::LetterBoxed;
 use crate::trie::Trie;
-use top_english_words::get_words;
+use crate::words::get_words;
 
 impl LetterBoxed {
-    pub fn build_puzzle_trie(&self) -> Trie {
-        let english_trie = self.build_english_trie();
+    pub fn new(letters: Vec<Vec<char>>) -> LetterBoxed {
+        let mut index_from_letter = [(0_usize, 0_usize); 26];
+        let mut side = 0_usize;
+        let mut i = 0_usize;
+        for letter in letters.concat() {
+            if i == letters[side].len() {
+                i = 0;
+                side += 1;
+            }
+            index_from_letter[letter as usize] = (side, i);
+        }
+        let mut lb = Self {
+            used_letters: letters.iter().map(|v| vec![0; v.len()]).collect(),
+            num_used_letters: 0,
+            index_from_letter,
+            total_letters: letters.iter().fold(0, |acc, v| acc + v.len() as u8),
+            letters,
+            english_trie: Trie::default(),
+            puzzle_trie: Trie::default(),
+        };
+        lb.build_puzzle_trie();
+        lb
+    }
+
+    pub fn build_puzzle_trie(&mut self) {
+        let english_trie = Self::build_english_trie();
         let mut trie = Trie::new();
         for i in 0..self.letters.len() {
             self.build_puzzle_trie_helper(i as u8, String::new(), &mut trie, &english_trie);
         }
-        trie
+        self.puzzle_trie = trie
     }
 
     fn build_puzzle_trie_helper(
@@ -45,20 +69,7 @@ impl LetterBoxed {
         }
     }
 
-    fn build_english_trie(&self) -> Trie {
-        Trie::from_vec(get_words::<String>())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_puzzle_trie() {
-        let lb = LetterBoxed::new(vec![vec!['o', 'l'], vec!['a', 'r'], vec!['p', 'd']]);
-        let trie = lb.build_puzzle_trie();
-        let trie_vec: Vec<String> = trie.list_members().unwrap();
-        println!("{:?}", trie_vec);
+    fn build_english_trie() -> Trie {
+        Trie::from_vec(get_words())
     }
 }

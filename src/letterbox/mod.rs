@@ -1,14 +1,15 @@
+use crate::trie::Trie;
+
 mod builder;
 mod solver;
-use std::char;
 
 #[derive(Default)]
 pub struct LetterBoxed {
     letters: Vec<Vec<char>>,
-}
-
-impl LetterBoxed {
-    pub fn new(letters: Vec<Vec<char>>) -> LetterBoxed {
-        Self { letters }
-    }
+    total_letters: u8,
+    used_letters: Vec<Vec<u8>>,
+    num_used_letters: u8,
+    index_from_letter: [(usize, usize); 26],
+    english_trie: Trie,
+    puzzle_trie: Trie,
 }

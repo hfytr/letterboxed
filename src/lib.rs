@@ -1,14 +1,13 @@
 mod letterbox;
 mod trie;
+mod words;
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
 #[cfg(test)]
 mod tests {
-    use self::letterbox::LetterBoxed;
-
-    use super::*;
+    use crate::letterbox::LetterBoxed;
 
     #[test]
     fn smaller_example() {
