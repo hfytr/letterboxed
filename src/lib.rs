@@ -11,16 +11,18 @@ mod tests {
 
     #[test]
     fn smaller_example() {
-        let mut lb = LetterBoxed::new(vec![vec!['o', 'l'], vec!['a', 'r'], vec!['p', 'd']]);
+        let mut lb = LetterBoxed::new(vec![vec!['t', 'o', 'i'], vec!['a', 'l', 'g']]);
+        println!("{:?}", lb.solve());
     }
 
     #[test]
     fn bigger_example() {
         let mut lb = LetterBoxed::new(vec![
-            vec!['o', 'l', 't'],
-            vec!['a', 'r', 'n'],
-            vec!['p', 'd', 'c'],
-            vec!['m', 'i', 'u'],
+            vec!['o', 'q', 'e'],
+            vec!['m', 'i', 'a'],
+            vec!['l', 'u', 'r'],
+            vec!['z', 'c', 'h'],
         ]);
+        println!("{:?}", lb.solve());
     }
 }

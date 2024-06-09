@@ -114,14 +114,7 @@ impl Trie {
         )
     }
 
-    pub fn list_keys(&self, key: &str) -> Option<Vec<String>> {
-        Some(
-            self.root
-                .query(key, 0)?
-                .list_reversed_keys()
-                .into_iter()
-                .map(|x| x.chars().rev().collect::<String>())
-                .collect(),
-        )
+    pub fn list_reversed_keys(&self, key: &str) -> Option<Vec<String>> {
+        Some(self.root.query(key, 0)?.list_reversed_keys())
     }
 }
